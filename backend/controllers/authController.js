@@ -5,9 +5,17 @@ import generateTokenAndCookies from "../utils/generateTokens.js";
 
 //---------------------SignIn------------------------//
 export const signinUser = async (req,res)=>{
+    console.log("Request received:", req.body);
     try{
         //get data from the user body
         const {fullName, userName, password, conformPassword, gender} = req.body;
+
+        // Example: Check for missing fields
+        if (!fullName || !userName || !password || !conformPassword || !gender) {
+            return res.status(400).json({ 
+                error: "All fields are required" 
+            });
+        }
 
         //password and conform password compare
         if (password !== conformPassword){
@@ -38,7 +46,7 @@ export const signinUser = async (req,res)=>{
             userName,
             password: hashedPassword,
             gender,
-            profilepic: gender === "male"? boyProfilePic : girlProfilePic
+            profilepic: gender?.toLowerCase() === "male"? boyProfilePic : girlProfilePic
         })
 
         //if successfull
@@ -47,14 +55,18 @@ export const signinUser = async (req,res)=>{
             generateTokenAndCookies(newUser._id,res);
 
             //save the created user model instatnt in the Db
-            await newUser.save();
+            // await newUser.save();
 
-            res.status(200).json({
-                _id: newUser._id,
-                fullName: newUser.fullName,
-                userName: newUser.userName,
-                profilepic: newUser.profilepic
-            })
+            // res.status(200).json({
+            //     _id: newUser._id,
+            //     fullName: newUser.fullName,
+            //     userName: newUser.userName,
+            //     profilepic: newUser.profilepic
+            // });
+            
+            const savedUser = await newUser.save();
+            res.status(201).json(savedUser);
+
         }else{
             res.status(500).json({
                 error:"Invalid user data"
@@ -62,7 +74,7 @@ export const signinUser = async (req,res)=>{
         }
 
     }catch(error){
-        console.log("Error in signin",error.message);
+        console.log("Error in signin",error);
         res.status(500).json({
             error:"Internal server error"
         })

@@ -1,0 +1,5 @@
+.chatContainerScroll_{
+    height: 85vh;
+    width: 500px;
+    flex-direction: column;
+}

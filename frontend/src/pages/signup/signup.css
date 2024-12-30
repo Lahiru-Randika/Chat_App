@@ -1,0 +1,33 @@
+.login{
+    max-width: auto;
+    flex-direction:column;
+}
+.card{
+    background-color: rgba(0,0,0,0.1);
+}
+.bg-image-vertical {
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: auto 100%;
+}
+.form{
+    width: 23rem;
+} 
+.logo{
+    color: #709085;
+}
+.login_heading{
+    letter-spacing: 1px;
+}
+.img{
+    object-fit: cover; 
+    object-position: left;
+}
+
+@media (min-width: 1025px) {
+    .h-custom-2 {
+        height: 100%;
+    }
+}
