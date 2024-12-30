@@ -3,12 +3,12 @@ import bcrypt from "bcryptjs";
 import generateTokenAndCookies from "../utils/generateTokens.js";
 
 
-//---------------------SignIn------------------------//
+//---------------------SignUp------------------------//
 export const signinUser = async (req,res)=>{
-    console.log("Request received:", req.body);
+    // console.log("Request received from frontend:", req.body);
     try{
         //get data from the user body
-        const {fullName, userName, password, conformPassword, gender} = req.body;
+        const {conformPassword, fullName,  gender, password, userName } = req.body;
 
         // Example: Check for missing fields
         if (!fullName || !userName || !password || !conformPassword || !gender) {
@@ -46,7 +46,7 @@ export const signinUser = async (req,res)=>{
             userName,
             password: hashedPassword,
             gender,
-            profilepic: gender?.toLowerCase() === "male"? boyProfilePic : girlProfilePic
+            profilepic: gender === "Male"? boyProfilePic : girlProfilePic
         })
 
         //if successfull
@@ -54,18 +54,15 @@ export const signinUser = async (req,res)=>{
             //generate jwt token
             generateTokenAndCookies(newUser._id,res);
 
-            //save the created user model instatnt in the Db
-            // await newUser.save();
+            // save the created user model instatnt in the Db
+            await newUser.save();
 
-            // res.status(200).json({
-            //     _id: newUser._id,
-            //     fullName: newUser.fullName,
-            //     userName: newUser.userName,
-            //     profilepic: newUser.profilepic
-            // });
-            
-            const savedUser = await newUser.save();
-            res.status(201).json(savedUser);
+            res.status(200).json({
+                _id: newUser._id,
+                fullName: newUser.fullName,
+                userName: newUser.userName,
+                profilepic: newUser.profilepic
+            });
 
         }else{
             res.status(500).json({
