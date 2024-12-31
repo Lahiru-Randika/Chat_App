@@ -3,14 +3,9 @@ import { toast } from 'react-hot-toast';
 import { userAuthContext } from "../context/authContext";
 
 function handleInputErrors({fullName,userName,password,conformPassword,gender}){
-    if (!fullName || !userName || !password || !conformPassword || !gender){
-        toast.error("Please fill in all fields");
+    if (!userName || !password){
+        toast.error("UserName and Password can not be empty");
         //to make success = false
-        return false;
-    }
-
-    if (password != conformPassword){
-        toast.error("Password do not match");
         return false;
     }
 
@@ -22,23 +17,25 @@ function handleInputErrors({fullName,userName,password,conformPassword,gender}){
     return true;
 }
 
-const userSignUp = ()=>{
-    const [loading, setLoading] = useState(false);
+const userLogin = ()=>{
+    const [loading,setLoading] = useState(false);
     const {authUser, setAuthUser} = userAuthContext();
 
-    const signup = async ({fullName, userName, password, conformPassword, gender}) =>{
-        const success = handleInputErrors({fullName, userName, password, conformPassword, gender});
+    const login = async ({password, userName})=>{
 
-        if(!success){
+        const success = handleInputErrors({userName, password});
+        
+        if (!success){
+            console.log("Error in user inputs");
             return;
         }
 
         try{
-            const res = await fetch("/api/auth/signup",{
+            const res = await fetch("/api/auth/login",{
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ fullName, userName, password, conformPassword, gender }),
-            });
+                body: JSON.stringify({ userName, password }),
+            })
 
             if (!res.ok) {
                 // Handle non-2xx status codes
@@ -50,18 +47,21 @@ const userSignUp = ()=>{
             const data = await res.json();
             console.log(data);
 
-            //localstorage settings
-            localStorage.setItem("chat-user", JSON.stringify(data));
-            setAuthUser(data);
+            if (localStorage.getItem("chat-user") === null){
+                localStorage.setItem("chat-user", JSON.stringify(data));
+                setAuthUser(data);
+            }
 
         }catch(error){
             toast.error(error.message);
-            console.log("Error in frontend signin: ", error.message)
+            console.log("Error in frontend login: ", error.message)
         }finally{
             setLoading(false);
         }
-    };
 
-    return {loading, signup};
+    }
+
+    return { loading,login }
 }
-export default userSignUp;
+
+export default userLogin;

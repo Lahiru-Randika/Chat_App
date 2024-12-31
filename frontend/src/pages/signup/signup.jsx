@@ -17,7 +17,7 @@ const Signup=()=>{
     
     const handleSubmit = async (e)=>{
         e.preventDefault();
-        console.log(inputs);
+        // console.log(inputs);
 
         await signup(inputs)
     }
@@ -69,7 +69,14 @@ const Signup=()=>{
                                     </div>
 
                                     <div className="pt-1 mb-4">
-                                        <button data-mdb-button-init data-mdb-ripple-init className="btn btn-info btn-lg btn-block" type="submit">Login</button>
+                                        <button data-mdb-button-init data-mdb-ripple-init className="btn btn-info btn-lg btn-block" type="submit" disabled={loading}>
+                                        {
+                                            loading? <div className="spinner-border" role="status">
+                                                        <span className="sr-only">Loading...</span>
+                                                    </div> 
+                                            : "SignUp"
+                                        }
+                                        </button>
                                     </div>
  
                                     <p className="small mb-3 pb-lg-2"><a className="text-muted" href="#!">Terms & Conditions</a></p>

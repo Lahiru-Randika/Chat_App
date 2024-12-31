@@ -1,23 +1,27 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from "./pages/login/login.jsx";
 import Home from "./pages/home/home.jsx";
 import Signup from "./pages/signup/signup.jsx";
 import { Toaster } from "react-hot-toast";
+import { userAuthContext } from './context/authContext.jsx';
 
 function App() {
+
+  const { authUser } = userAuthContext();
+
   return (
     <Router>
       <div className='p-4 d-flex align-items-center justify-content-center'>
         <Routes>
           <Route path="/" element={
-            <Home />
+            authUser? <Home /> : <Navigate to="/login"/>
           }/>
           <Route path="/login" element={
-            <Login />
+            authUser? <Navigate to="/"/> : <Login />
           }/>
           <Route path="/signup" element={
-            <Signup />
+            authUser? <Navigate to="/login" /> : <Signup />
           }/>
         </Routes>
 

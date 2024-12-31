@@ -1,10 +1,14 @@
+import userLogOut from "../../../../hooks/userLogOut.js";
 import "./messagebar.css"
 
 const MessageBar=()=>{
+    const {loading, logout} = userLogOut();
+
     return(
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
             <div class="selected-user">
                 <span>To: <span class="name">Emily Russell</span></span>
+                <button className="btn btn-success" type="button" onClick={logout}>LogOut</button>
             </div>
             <div class="chat-container">
                 <ul class="chat-box chatContainerScroll">

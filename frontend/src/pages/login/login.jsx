@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 import "./login.css"
+import { useState } from "react";
+import userLogin from "../../hooks/userLogin";
 
 const Login=()=>{
+
+    const [input, setInput] =  useState({
+        userName:"",
+        password:""
+    });
+
+    const {loading, login} = userLogin();
+
+    const handleSubmit= async (e)=>{
+        e.preventDefault();
+        console.log(input);
+        login(input);
+    };
+
     return(
         <div className="login d-flex align-items-center justify-content-center">
             <section class="vh-120 card p-4">
@@ -15,22 +31,22 @@ const Login=()=>{
                             </div>
 
                             <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-4 pt-5 pt-xl-0 mt-xl-n5">
-                                <form className="form">
+                                <form className="form" onSubmit={handleSubmit}>
 
                                     <h3 class="login_heading fw-normal mb-3 pb-3">Log in</h3>
 
                                     <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="text" id="userName" class="form-control form-control-lg" />
+                                        <input type="text" id="userName" class="form-control form-control-lg" value={input.userName} onChange={(e)=>setInput({...input,userName: e.target.value})}/>
                                         <label class="form-label" for="userName">UserName</label>
                                     </div>
 
                                     <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="password" class="form-control form-control-lg" />
+                                        <input type="password" id="password" class="form-control form-control-lg" value={input.password} onChange={(e)=>setInput({...input,password:e.target.value})}/>
                                         <label class="form-label" for="password">Password</label>
                                     </div>
 
                                     <div class="pt-1 mb-4">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" type="button">Login</button>
+                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" type="submit">Login</button>
                                     </div>
  
                                     <p class="small mb-3 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
