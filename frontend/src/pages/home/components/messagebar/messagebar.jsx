@@ -1,85 +1,140 @@
 import userLogOut from "../../../../hooks/userLogOut.js";
-import "./messagebar.css"
+import userGetChat from "../../../../hooks/userGetChat.js";
+import useGetConversations from "../../../../hooks/useGetConversations.js";
+import userSendMessage from "../../../../hooks/userSendMessage.js";
+import { useState, useContext, useEffect } from "react";
+import { MyContext } from "../../../../App.jsx";
+import "./messagebar.css";
+import useListenMessages from "../../../../hooks/useListenMessages.js";
+import toast from "react-hot-toast";
 
-const MessageBar=()=>{
-    const {loading, logout} = userLogOut();
+const MessageBar = () => {
+    const { logout } = userLogOut();
+    const { loadingconversations, conversations } = useGetConversations();
 
-    return(
-        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
-            <div class="selected-user">
-                <span>To: <span class="name">Emily Russell</span></span>
-                <button className="btn btn-success" type="button" onClick={logout}>LogOut</button>
+    const [message, setMessage] = useState("");
+    const { currentRequestedChatName, clickedMeToSeeMyChat, currentRequestedPropic } = useContext(MyContext);
+    const { loadingChats, chatMessages, refetch } = userGetChat();
+    const { loading: sending, sendMessage } = userSendMessage();
+
+    // Define state for messages
+    const [messages, setMessages] = useState([]);
+    
+    // Using real-time messages from useListenMessages hook
+    const { messages: realTimeMessages = []} = useListenMessages();
+
+    // Merging the messages (static + real-time)
+    useEffect(() => {
+        if (Array.isArray(realTimeMessages) && Array.isArray(chatMessages)) {
+            const allMessages = [...chatMessages, ...realTimeMessages].filter(
+                (message) => message.senderId === clickedMeToSeeMyChat || message.receiverId === clickedMeToSeeMyChat
+            );
+
+            //Stop apending the same message again and again to the allMessages queqe
+            const uniqueMessages = allMessages.filter(
+                (msg, index, self) =>
+                    index === self.findIndex((m) => m._id === msg._id) // Ensure unique `_id`
+            );
+
+            setMessages(uniqueMessages);
+        }
+    }, [chatMessages, realTimeMessages, clickedMeToSeeMyChat]);
+
+    const currentUser = JSON.parse(localStorage.getItem("chat-user"));
+
+    const userToChat = conversations.find(
+        conversation => conversation.userName === currentRequestedChatName
+    );
+
+    const sortedMessages = messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    const handleSubmit = async () => {
+        if (!message.trim()) {
+            toast.error("Message cannot be empty");
+            return;
+        }
+
+        try {
+            console.log("Sending message:", message);
+            const result = await sendMessage(message, clickedMeToSeeMyChat);
+
+            if (result) {
+                setMessage(""); // Clear the input
+                await refetch(); // Refetch the chat messages
+            }
+        } catch (error) {
+            console.error("Error sending message:", error.message);
+            toast.error("Failed to send the message");
+        }
+    };
+
+    return (
+        <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+            <div className="selected-user">
+                <span>
+                    To: <span className="name">{currentRequestedChatName}</span>
+                </span>
+                <button className="btn btn-success" type="button" onClick={logout}>
+                    LogOut
+                </button>
             </div>
-            <div class="chat-container">
-                <ul class="chat-box chatContainerScroll">
-                    <li class="chat-left">
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                            <div class="chat-name">Russell</div>
-                        </div>
-                        <div class="chat-text">Hello, I'm Russell.
-                            <br/>How can I help you today?</div>
-                        <div class="chat-hour">08:55 <span class="fa fa-check-circle"></span></div>
-                    </li>
-                    <li class="chat-right">
-                        <div class="chat-hour">08:56 <span class="fa fa-check-circle"></span></div>
-                        <div class="chat-text">Hi, Russell
-                            <br/> I need more information about Developer Plan.</div>
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                            <div class="chat-name">Sam</div>
-                        </div>
-                    </li>
-                    <li class="chat-left">
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                            <div class="chat-name">Russell</div>
-                        </div>
-                        <div class="chat-text">Are we meeting today?
-                            <br/>Project has been already finished and I have results to show you.</div>
-                        <div class="chat-hour">08:57 <span class="fa fa-check-circle"></span></div>
-                    </li>
-                    <li class="chat-right">
-                        <div class="chat-hour">08:59 <span class="fa fa-check-circle"></span></div>
-                        <div class="chat-text">Well I am not sure.
-                            <br/>I have results to show you.</div>
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar5.png" alt="Retail Admin"/>
-                            <div class="chat-name">Joyse</div>
-                        </div>
-                    </li>
-                    <li class="chat-left">
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                            <div class="chat-name">Russell</div>
-                        </div>
-                        <div class="chat-text">The rest of the team is not here yet.
-                            <br/>Maybe in an hour or so?</div>
-                        <div class="chat-hour">08:57 <span class="fa fa-check-circle"></span></div>
-                    </li>
-                    <li class="chat-right">
-                        <div class="chat-hour">08:59 <span class="fa fa-check-circle"></span></div>
-                        <div class="chat-text">Have you faced any problems at the last phase of the project?</div>
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar4.png" alt="Retail Admin"/>
-                            <div class="chat-name">Jin</div>
-                        </div>
-                    </li>
-                    <li class="chat-left">
-                        <div class="chat-avatar">
-                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                            <div class="chat-name">Russell</div>
-                        </div>
-                        <div class="chat-text">Actually everything was fine.
-                            <br/>I'm very excited to show this to our team.</div>
-                        <div class="chat-hour">07:00 <span class="fa fa-check-circle"></span></div>
-                    </li>
+            <div className="chat-container">
+            <ul className="chat-box chatContainerScroll">
+                    {!loadingChats && sortedMessages.length === 0 ? (
+                        <p className="d-flex align-items-center justify-content-center h-100">Send a message to start the chat</p>
+                    ) : (
+                        sortedMessages.map((message) => (
+                            message.senderId !== currentUser._id ? (
+                                // Message from the other user (left-aligned)
+                                <li className="chat-left" key={message._id}>
+                                    <div className="chat-avatar">
+                                        <img
+                                            src={currentRequestedPropic}
+                                            alt="😊"
+                                        />
+                                        <div className="chat-name">{currentRequestedChatName}</div>
+                                    </div>
+                                    <div className="chat-text">{message.message}</div>
+                                    <div className="chat-hour">
+                                        {new Date(message.createdAt).toLocaleString()} 
+                                        <span className="fa fa-check-circle"></span>
+                                    </div>
+                                </li>
+                            ) : (
+                                // Message from the current user (right-aligned)
+                                <li className="chat-right" key={message._id}>
+                                    <div className="chat-hour">
+                                        {new Date(message.createdAt).toLocaleString()} 
+                                        <span className="fa fa-check-circle"></span>
+                                    </div>
+                                    <div className="chat-text">{message.message}</div>
+                                    <div className="chat-avatar">
+                                        <img
+                                            src={currentUser.profilepic}
+                                            alt="😊"
+                                        />
+                                        <div className="chat-name">{currentUser.userName}</div>
+                                    </div>
+                                </li>
+                            )
+                        ))
+                    )}
                 </ul>
-                <div class="form-group mt-3 mb-0">
-                    <textarea class="form-control" rows="3" placeholder="Type your message here..."></textarea>
+                <div className="form-group mt-3 mb-0">
+                    <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Type your message here..."
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                    ></textarea>
+                    <button className="btn btn-primary" type="button" onClick={handleSubmit}>
+                        Send
+                    </button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
+
 export default MessageBar;

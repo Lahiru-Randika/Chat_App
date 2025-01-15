@@ -1,6 +1,8 @@
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
 import mongoose from "mongoose";
+import { getReceiverSocketId } from "../socket/socket.js";
+import { io } from "../socket/socket.js"; 
 
 //------------------------for message sending---------------------------//
 export const sendMessage = async (req,res)=>{
@@ -53,6 +55,17 @@ export const sendMessage = async (req,res)=>{
         // both entries are save to the Db parallelly
         await Promise.all([conversationOf.save(), newMessage.save()]);
 
+        //send message to the receiver also using socket server | realtime conversation
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        console.log("receiverSocketId: ",receiverSocketId)
+        if (receiverSocketId){
+            //io.to(<socketId>).emit() ===> this method is used to send events to one specific client
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }else {
+            console.log("Receiver is not connected or socket ID not found.");
+        }
+
+
         res.status(200).json({newMessage});
 
     }catch(error){
@@ -69,6 +82,7 @@ export const getMessage = async (req,res)=>{
     try{
         //get the message receiver's id from the url
         const {userid:receiverId} = req.params;
+        console.log(receiverId);
 
         //get the message sender's id from cookies through protectRouter func
         const senderId = req.user._id;
@@ -79,6 +93,8 @@ export const getMessage = async (req,res)=>{
             participants: {$all: [senderId, receiverId]},
         }).populate("messages");
 
+        console.log("Conversation found:", conversationOf);
+        
         //if conversationOf does not existrs => return an empty array
         if (!conversationOf){
             return res.status(200).json([]);

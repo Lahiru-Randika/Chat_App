@@ -6,10 +6,10 @@ import NoChatSelected from "./components/nochatselected/nochatselected.jsx";
 const Home=()=>{
 
     const [clicked, setClicked] = useState(false);
+    const [clickedMeToSeeMyChat, setClickedMeToSeeMyChat] = useState(null);
 
     return(
-        <div className="login d-flex align-items-center justify-content-center">
-            <div className="login d-flex align-items-center justify-content-center">
+        <div className="login">
             <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
             <div class="container">
                 <div class="content-wrapper">
@@ -30,7 +30,6 @@ const Home=()=>{
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }
