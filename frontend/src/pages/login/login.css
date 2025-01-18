@@ -20,10 +20,30 @@
 }
 .login_heading{
     letter-spacing: 1px;
+    color:rgb(225, 227, 226);
 }
-.img{
+img{
     object-fit: cover; 
     object-position: left;
+    opacity:calc(0.4);
+    border-radius: 50px;
+    padding: 20px;
+    height: 90%;
+}
+.form-label{
+    color: rgb(225, 227, 226);
+}
+input.form-control{
+    background-color: transparent;
+    color: rgb(225, 227, 226);
+    margin-bottom: 10px;
+}
+input.form-control:focus{
+    background-color: transparent;
+    color: rgb(225, 227, 226);
+}
+.small{
+    color: rgb(225, 227, 226);
 }
 
 @media (min-width: 1025px) {

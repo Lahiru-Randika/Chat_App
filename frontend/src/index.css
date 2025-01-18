@@ -1,6 +1,19 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
-body{
-    margin:0px;
-    padding: 0px;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height:100%;
+    background-color:rgba(37, 208, 242, 0.36);
+}
+::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius:10px;
+    border: 1px solid white;
 }

@@ -74,14 +74,14 @@ const MessageBar = () => {
                 <span>
                     To: <span className="name">{currentRequestedChatName}</span>
                 </span>
-                <button className="btn btn-success" type="button" onClick={logout}>
-                    LogOut
+                <button className="btn btn-success logout" type="button" onClick={logout}>
+                    <i class="bi bi-box-arrow-right"></i>
                 </button>
             </div>
             <div className="chat-container">
             <ul className="chat-box chatContainerScroll">
                     {!loadingChats && sortedMessages.length === 0 ? (
-                        <p className="d-flex align-items-center justify-content-center h-100">Send a message to start the chat</p>
+                        <p className="select-chat d-flex align-items-center justify-content-center h-100">Send a message to start the chat</p>
                     ) : (
                         sortedMessages.map((message) => (
                             message.senderId !== currentUser._id ? (
@@ -128,8 +128,8 @@ const MessageBar = () => {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     ></textarea>
-                    <button className="btn btn-primary" type="button" onClick={handleSubmit}>
-                        Send
+                    <button className="button btn btn-primary" type="button" onClick={handleSubmit}>
+                        <i class="bi bi-send-fill"></i>
                     </button>
                 </div>
             </div>

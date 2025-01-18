@@ -7,10 +7,15 @@
 }
 
 .chat-search-box .input-group .form-control {
-    -webkit-border-radius: 2px 0 0 2px;
-    -moz-border-radius: 2px 0 0 2px;
-    border-radius: 2px 0 0 2px;
+    -webkit-border-radius: 12px 0 0 12px;
+    -moz-border-radius: 12px 0 0 12px;
+    border-radius: 12px 0 0 12px;
     border-right: 0;
+    height: 50px;
+    background-color:transparent;
+}
+.chat-search-box .input-group .form-control::placeholder{
+    color: #0dcaf0;
 }
 
 .chat-search-box .input-group .form-control:focus {
@@ -20,8 +25,9 @@
 .chat-search-box .input-group .input-group-btn .btn {
     -webkit-border-radius: 0 2px 2px 0;
     -moz-border-radius: 0 2px 2px 0;
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 12px 12px 0;
     margin: 0;
+    height: 50px;
 }
 
 .chat-search-box .input-group .input-group-btn .btn i {
@@ -29,8 +35,12 @@
     line-height: 100%;
     vertical-align: middle;
 }
-
-
+.chat-search-box .input-group .input-group-btn .btn:hover{
+    background-color:rgba(13, 202, 240, 0.27);
+}
+.chat-search-box .input-group .input-group-btn .btn:hover i {
+    color:#0dcaf0;
+}
 @media (max-width: 767px) {
     .chat-search-box {
         display: none;

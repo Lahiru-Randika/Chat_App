@@ -6,7 +6,7 @@
     width: 100%;
     min-height: 64px;
     line-height: 64px;
-    border-bottom: 1px solid #e6ecf3;
+    border-bottom: 1px solid #c4d2e2;
     -webkit-border-radius: 0 3px 0 0;
     -moz-border-radius: 0 3px 0 0;
     border-radius: 0 3px 0 0;
@@ -15,12 +15,12 @@
 
 .selected-user span {
     line-height: 100%;
+    color: #c4d2e2;
 }
 
 .selected-user span.name {
     font-weight: 700;
 }
-
 .chat-container {
     position: relative;
     padding: 1rem;
@@ -32,6 +32,8 @@
     flex: 1;
     flex-direction: row;
     margin-bottom: 40px;
+    position:relative;
+    padding: 10px;
 }
 
 .chat-container li img {
@@ -40,6 +42,7 @@
     -webkit-border-radius: 30px;
     -moz-border-radius: 30px;
     border-radius: 30px;
+    position: absolute;
 }
 
 .chat-container li .chat-avatar {
@@ -53,23 +56,45 @@
 .chat-container li.chat-right > .chat-avatar {
     margin-left: 20px;
     margin-right: 0;
+    position:absolute;
+    right: 15px;
+    bottom: 40px;
 }
 
 .chat-container li .chat-name {
     font-size: .75rem;
     color: #999999;
     text-align: center;
+    position:relative;
+    top: 55px;
+    left: 10px;
 }
-
+.chat-container li.chat-left .chat-name {
+    position:relative;
+    top: 45px;
+    left: -5px;
+}
 .chat-container li .chat-text {
     padding: .4rem 1rem;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
-    border-radius: 4px;
-    background: #ffffff;
+    border-radius: 8px;
+    background:rgba(0, 0, 0, 0.26);
     font-weight: 300;
     line-height: 150%;
     position: relative;
+    right: 50px;
+    margin-left: 45px;
+    color: #c4d2e2;
+}
+
+.chat-container li.chat-left .chat-text {
+    position: relative;
+    left: 0px;
+    margin-left: 10px;
+    color: #c4d2e2;
+    font-weight:400;
+    background-color:rgba(63, 58, 58, 0.84)
 }
 
 .chat-container li .chat-text:before {
@@ -80,11 +105,15 @@
     top: 10px;
     left: -20px;
     border: 10px solid;
-    border-color: transparent #ffffff transparent transparent;
+    border-color: transparent  #ffffff transparent transparent;
 }
 
 .chat-container li.chat-right > .chat-text {
     text-align: right;
+    color: white;
+    font-weight:400;
+    background-color:rgba(63, 58, 58, 0.84);
+    margin-right:10px;
 }
 
 .chat-container li.chat-right > .chat-text:before {
@@ -102,15 +131,45 @@
     align-items: center;
     justify-content: center;
     margin: 0 0 0 15px;
+    color: white;
 }
 
 .chat-container li .chat-hour > span {
     font-size: 16px;
+    margin: 5px;
     color: #9ec94a;
 }
 
 .chat-container li.chat-right > .chat-hour {
     margin: 0 15px 0 0;
+}
+.form-group{
+    position:relative;
+    height: 50px;
+}
+.form-group .form-control{
+    background-color: transparent;
+    color: white;
+    padding-right:70px;
+    height:100%;
+}
+.form-group .form-control::placeholder {
+    color: #0dcaf0;
+    opacity: 1;
+}
+.form-group .button{
+    position:absolute;
+    top:10%;
+    right:7px;
+    border-radius: 50%;
+    background-color:#0dcaf0;;
+}
+.form-group .button i{
+    color: black;
+}
+.select-chat{
+    color:white;
+    font-weight:400;
 }
 
 @media (max-width: 992px) {
@@ -178,22 +237,51 @@ ul {
     margin: 0;
     padding: 0;
 }
-.card {
-    border: 0;
-    background: #f4f5fb;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    margin-bottom: 2rem;
-    box-shadow: none;
+
+.login {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-image: url('https://tse1.mm.bing.net/th?id=OIP.mKJ0q8Z2UZTewUGPUfe-XgHaNw&pid=ImgDet&w=176&h=327&c=7');
+    background-repeat: repeat;
+    background-size: auto;
+    z-index: 1;
 }
+
+.login .img {
+    display: none;
+}
+
+
+.container {
+    position: relative;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 100%; 
+    height:100%;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 .chatContainerScroll{
-    height: 320px;
+    height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border-radius: 10px;
+    background-color:transparent;
 }
-

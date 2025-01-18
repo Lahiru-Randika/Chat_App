@@ -1,5 +1,12 @@
 .chatContainerScroll_{
-    height: 85vh;
-    width: 500px;
+    width: 100%;
+    height: 100vh;
     flex-direction: column;
+}
+.instructions, .greeting{
+    color: white;
+}
+.greeting p{
+    margin-left: 7px;
+    color: #25cff2;
 }

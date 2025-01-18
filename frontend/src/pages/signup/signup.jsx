@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "./signup.css"
 import { useState } from "react";
 import userSignUp from "../../hooks/userSignUp";
+import logo from '../../assets/logo.webp';
 
 const Signup=()=>{
 
@@ -23,7 +24,7 @@ const Signup=()=>{
     }
 
     return(
-        <div className="login d-flex align-items-center justify-content-center">
+        <div className="login register d-flex align-items-center justify-content-center">
             <section className="vh-120 card p-4">
                 <div className="container-fluid">
                     <div className="row">
@@ -79,14 +80,14 @@ const Signup=()=>{
                                         </button>
                                     </div>
  
-                                    <p className="small mb-3 pb-lg-2"><a className="text-muted" href="#!">Terms & Conditions</a></p>
+                                    <p className="small mb-3 pb-lg-2"><a className="link-info" href="#!">Terms & Conditions</a></p>
                                     <p className="small mb-5 pb-lg-2">Already have an account? <Link to="/login" className="link-info">Login here</Link></p>
                                 </form>
                             </div>
 
                         </div>
                         <div className="col-sm-6 px-0 d-none d-sm-block">
-                            <img  className="img w-100 vh-100" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp" alt="Login image"/>
+                            <img  className="w-100" src={logo} alt="Login image"/>
                         </div>
                     </div>
                 </div>

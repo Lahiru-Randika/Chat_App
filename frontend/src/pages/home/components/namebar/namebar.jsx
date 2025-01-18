@@ -43,7 +43,9 @@ const NameBar=({clicked, setClicked})=>{
     return(
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
             <div class="users-container">
-                <SearchBar/>
+                <div className="searchbar">
+                    <SearchBar/>
+                </div>
                 
                 <ul class="users">
 
@@ -68,9 +70,9 @@ const NameBar=({clicked, setClicked})=>{
                                         </div>
                                         <span>{emojis[index]}</span>
                                     </div>
-                                    <p className="name-time">
+                                    <p className="name-time d-flex align-items-center">
                                         <span className="name">{conversation.userName}</span>
-                                        <span className="time">{conversation.updatedAt}</span>
+                                        <span className="time">{new Date(conversation.updatedAt).toLocaleString()} </span>
                                     </p>
                                 </li>
                             );

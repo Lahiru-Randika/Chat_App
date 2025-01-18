@@ -39,7 +39,7 @@ const SearchBar = ()=>{
     return(
         <div class="chat-search-box">
             <div class="input-group">
-                <input class="form-control" placeholder="Search" value={searchedUser} onChange={(e)=>setSearchedUser(e.target.value)}></input>
+                <input class="form-control" placeholder="Search..." value={searchedUser} onChange={(e)=>setSearchedUser(e.target.value)}></input>
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-info" onClick={handleClick}>
                         <i class="fa fa-search"></i>

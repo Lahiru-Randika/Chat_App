@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "./login.css"
 import { useState } from "react";
 import userLogin from "../../hooks/userLogin";
+import logo from '../../assets/logo.webp'
 
 const Login=()=>{
 
@@ -49,14 +50,14 @@ const Login=()=>{
                                         <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" type="submit">Login</button>
                                     </div>
  
-                                    <p class="small mb-3 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
+                                    <p class="small mb-3 pb-lg-2"><Link to="#" class="link-info" href="#!">Forgot password?</Link></p>
                                     <p class="small mb-5 pb-lg-2">Don't have an account? <Link to="/signup" class="link-info">Register here</Link></p>
                                 </form>
                             </div>
 
                         </div>
                         <div class="col-sm-6 px-0 d-none d-sm-block">
-                            <img  className="img" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp" alt="Login image" class="w-100 vh-100"/>
+                            <img src={logo} alt="Login image" class="w-100"/>
                         </div>
                     </div>
                 </div>
