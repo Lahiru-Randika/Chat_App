@@ -10,7 +10,8 @@ const generateTokenAndCookies = (userId, res)=>{
     res.cookie("jwt",token,{
         maxAge: 15*24*60*60*1000, //because we should give 15 days in miliseconds
         httpOnly: true, //prevent XSS attacks (users can not read this via javascript)
-        sameSite: "strict" //prevent CSRF attacks
+        sameSite: "strict",//prevent CSRF attacks
+        secure: process.env.NODE_ENV !=="development"
     })
 }   
 
