@@ -57,7 +57,7 @@ const Login=()=>{
 
                         </div>
                         <div class="col-sm-6 px-0 d-none d-sm-block">
-                            <img src={logo} alt="Login image" class="w-100"/>
+                            <img src={logo} alt="Login" className="w-100 image"/>
                         </div>
                     </div>
                 </div>

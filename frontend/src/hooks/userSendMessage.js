@@ -25,7 +25,7 @@ const userSendMessage=(message)=>{
                 }
     
                 const data = await res.json();
-                console.log(data);
+                console.log("sent to the receiver: ",data);
                 return data;
             }catch(error){
                 console.log(error.message)

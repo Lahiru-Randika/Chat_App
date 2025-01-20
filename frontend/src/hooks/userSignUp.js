@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from 'react-hot-toast';
 import { userAuthContext } from "../context/authContext";
+import useGetConversations from "./useGetConversations";
+import { useSocketContext } from "../context/socketContext";
 
 function handleInputErrors({fullName,userName,password,conformPassword,gender}){
     if (!fullName || !userName || !password || !conformPassword || !gender){
@@ -25,6 +27,7 @@ function handleInputErrors({fullName,userName,password,conformPassword,gender}){
 const userSignUp = ()=>{
     const [loading, setLoading] = useState(false);
     const {authUser, setAuthUser} = userAuthContext();
+    const { socket } = useSocketContext();
 
     const signup = async ({fullName, userName, password, conformPassword, gender}) =>{
         const success = handleInputErrors({fullName, userName, password, conformPassword, gender});
@@ -50,9 +53,14 @@ const userSignUp = ()=>{
             const data = await res.json();
             console.log(data);
 
+            // Emit the new user to the server
+            if (socket) {
+                socket.emit("newUser", data);
+            }
+
             //localstorage settings
             localStorage.setItem("chat-user", JSON.stringify(data));
-            setAuthUser(data);
+            setAuthUser(data);            
 
         }catch(error){
             toast.error(error.message);

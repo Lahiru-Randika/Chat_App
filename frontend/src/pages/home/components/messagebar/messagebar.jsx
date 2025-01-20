@@ -16,6 +16,7 @@ const MessageBar = () => {
     const { currentRequestedChatName, clickedMeToSeeMyChat, currentRequestedPropic } = useContext(MyContext);
     const { loadingChats, chatMessages, refetch } = userGetChat();
     const { loading: sending, sendMessage } = userSendMessage();
+    const [lastSentMessage, setLastSentMessage]= useState();
 
     // Define state for messages
     const [messages, setMessages] = useState([]);
@@ -59,6 +60,7 @@ const MessageBar = () => {
             const result = await sendMessage(message, clickedMeToSeeMyChat);
 
             if (result) {
+                setLastSentMessage(result);
                 setMessage(""); // Clear the input
                 await refetch(); // Refetch the chat messages
             }

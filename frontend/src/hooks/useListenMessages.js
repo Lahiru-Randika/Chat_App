@@ -14,7 +14,7 @@ const useListenMessages = () => {
 
     useEffect(() => {
         const handleNewMessage = (newMessage) => {
-            console.log("Received new message:", newMessage.receiverId ,"and clickedMeToSeeMyChat: ", clickedMeToSeeMyChat);
+            console.log("Received new message:", newMessage.senderId ,"and clickedMeToSeeMyChat: ", clickedMeToSeeMyChat);
 
             // Update state based on the previous state
             if (newMessage.senderId === clickedMeToSeeMyChat) {

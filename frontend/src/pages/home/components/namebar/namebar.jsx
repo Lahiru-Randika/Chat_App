@@ -1,4 +1,4 @@
-import { useState, useContext  } from "react";
+import { useState, useContext, useEffect  } from "react";
 import useGetConversations from "../../../../hooks/useGetConversations";
 import { getRandomEmoji } from "../../../../utils/emojis";
 import { MyContext } from "../../../../App.jsx";
@@ -6,13 +6,15 @@ import "./namebar.css"
 import useConversation from "../../../../zustand/useConversation.js";
 import SearchBar from "../searchbar/searchbar.jsx";
 import { useSocketContext } from "../../../../context/socketContext.jsx";
+import useListenNewMembers from "../../../../hooks/useListenNewMembers.js";
 
 const NameBar=({clicked, setClicked})=>{
 
     const {loading, conversations} = useGetConversations();
     const [clickedConIndex, setClickedConIndex] = useState(null);
+    const [conWithNewUsers, setConWithNewUsers] = useState([]);
 
-    const { currentRequestedChatName, setCurrentRequestedChatName, clickedMeToSeeMyChat, setClickedMeToSeeMyChat, searchedUser, setSearchedUser, currentRequestedPropic, setCurrentRequestedPropic } = useContext(MyContext);
+    const { currentRequestedChatName, setCurrentRequestedChatName, clickedMeToSeeMyChat, setClickedMeToSeeMyChat, searchedUser, setSearchedUser, currentRequestedPropic, setCurrentRequestedPropic, searchedConversation } = useContext(MyContext);
 
     //--------------------------
     // const {selectedConversation, setSelectedConversation} = useConversation();
@@ -27,12 +29,27 @@ const NameBar=({clicked, setClicked})=>{
     const {onlineUsers} = useSocketContext();
     // const isOnline = onlineUsers.hasOwnProperty(conversations._id);
 
+    const { conversationsList: realTimeNewUsers = []} = useListenNewMembers();
+
+    useEffect(() => {
+        if (Array.isArray(realTimeNewUsers) && Array.isArray(conversations)) {
+            const allUsers = [...conversations, ...realTimeNewUsers];
+
+            // const uniqueMessages = allMessages.filter(
+            //     (msg, index, self) =>
+            //         index === self.findIndex((m) => m._id === msg._id)
+            // );
+
+            setConWithNewUsers(allUsers);
+        }
+    }, [conversations, realTimeNewUsers]);
+
     const handleClicked = (Clickedindex, conversations)=>{
 
         // setSelectedConversation(conversations._id);
         setClicked(true);
         setClickedConIndex(Clickedindex);
-        // console.log(conversations._id)
+        console.log(conversations)
 
         setClickedMeToSeeMyChat(conversations._id);
         setCurrentRequestedChatName(conversations.userName);
@@ -54,30 +71,56 @@ const NameBar=({clicked, setClicked})=>{
                             <span className="sr-only"></span>
                         </div>
                     ) : (
-                        conversations.map((conversation, index) => {
-                            const isOnline = onlineUsers.includes(conversation._id);
-                            return (
-                                <li
-                                    className={`person ${clickedConIndex === index ? "active" : ""}`}
-                                    data-chat={`person${index}`}
-                                    onClick={() => handleClicked(index, conversation)}
-                                    key={index}
-                                >
-                                    <div className="user_list d-flex">
-                                        <div className="user">
-                                            <img src={conversation.profilepic} alt="User Avatar" />
-                                            <span className={`status ${isOnline ? "online" : "offline"}`}></span>
+                        searchedConversation?.length === 0 ?
+                            conWithNewUsers.map((conversation, index) => {
+                                const isOnline = onlineUsers.includes(conversation._id);
+                                return (
+                                    <li
+                                        className={`person ${clickedConIndex === index ? "active" : ""}`}
+                                        data-chat={`person${index}`}
+                                        onClick={() => handleClicked(index, conversation)}
+                                        key={index}
+                                    >
+                                        <div className="user_list d-flex">
+                                            <div className="user">
+                                                <img src={conversation.profilepic} alt="User Avatar" />
+                                                <span className={`status ${isOnline ? "online" : "offline"}`}></span>
+                                            </div>
+                                            <span>{emojis[index]}</span>
                                         </div>
-                                        <span>{emojis[index]}</span>
-                                    </div>
-                                    <p className="name-time d-flex align-items-center">
-                                        <span className="name">{conversation.userName}</span>
-                                        <span className="time">{new Date(conversation.updatedAt).toLocaleString()} </span>
-                                    </p>
-                                </li>
-                            );
-                        })
-                    )}
+                                        <p className="name-time d-flex align-items-center">
+                                            <span className="name">{conversation.userName}</span>
+                                            <span className="time">{new Date(conversation.updatedAt).toLocaleString()} </span>
+                                        </p>
+                                    </li>
+                                );
+                            })
+                            :
+                            searchedConversation.map((conversation, index) => {
+                                const isOnline = onlineUsers.includes(conversation._id);
+                                return (
+                                    <li
+                                        className={`person ${clickedConIndex === index ? "active" : ""}`}
+                                        data-chat={`person${index}`}
+                                        onClick={() => handleClicked(index, conversation)}
+                                        key={index}
+                                    >
+                                        <div className="user_list d-flex">
+                                            <div className="user">
+                                                <img src={conversation.profilepic} alt="User Avatar" />
+                                                <span className={`status ${isOnline ? "online" : "offline"}`}></span>
+                                            </div>
+                                            <span>{emojis[index]}</span>
+                                        </div>
+                                        <p className="name-time d-flex align-items-center">
+                                            <span className="name">{conversation.userName}</span>
+                                            <span className="time">{new Date(conversation.updatedAt).toLocaleString()} </span>
+                                        </p>
+                                    </li>
+                                );
+                            })
+                        )
+                    }
                 </ul>
             </div>
         </div> 

@@ -87,7 +87,7 @@ const Signup=()=>{
 
                         </div>
                         <div className="col-sm-6 px-0 d-none d-sm-block">
-                            <img  className="w-100" src={logo} alt="Login image"/>
+                            <img className="w-100 image" src={logo} alt="Login image"/>
                         </div>
                     </div>
                 </div>

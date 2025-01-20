@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndCookies from "../utils/generateTokens.js";
+import { io } from "../socket/socket.js";
 
 
 //---------------------SignUp------------------------//
@@ -57,6 +58,14 @@ export const signinUser = async (req,res)=>{
             // save the created user model instatnt in the Db
             await newUser.save();
 
+            // Emit the new user event to all connected clients
+            io.emit('newUser', {
+                _id: newUser._id,
+                fullName: newUser.fullName,
+                userName: newUser.userName,
+                profilepic: newUser.profilepic,
+            });
+            
             res.status(200).json({
                 _id: newUser._id,
                 fullName: newUser.fullName,

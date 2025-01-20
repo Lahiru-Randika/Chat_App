@@ -22,7 +22,7 @@
     letter-spacing: 1px;
     color:rgb(225, 227, 226);
 }
-img{
+img.image{
     object-fit: cover; 
     object-position: left;
     opacity:calc(0.4);
