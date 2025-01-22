@@ -171,6 +171,12 @@
     color:white;
     font-weight:400;
 }
+.popup{
+    display: auto;
+}
+.no{
+    display:none;
+}
 
 @media (max-width: 992px) {
     .selected-user {

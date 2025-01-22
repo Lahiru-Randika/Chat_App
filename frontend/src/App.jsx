@@ -15,9 +15,10 @@ function App() {
 
   const [currentRequestedChatName, setCurrentRequestedChatName] = useState("");
   const [currentRequestedPropic, setCurrentRequestedPropic] = useState();
-  const [clickedMeToSeeMyChat,setClickedMeToSeeMyChat] = useState();
+  const [clickedMeToSeeMyChat,setClickedMeToSeeMyChat] = useState(null);
   const [searchedUser, setSearchedUser] = useState("");
-  const [searchedConversation, setSearchedConversation ]= useState([])
+  const [searchedConversation, setSearchedConversation ]= useState([]);
+  const [unseenMessage, setUnseenMessage] = useState([]);
 
   const values={
     currentRequestedChatName, 
@@ -29,7 +30,9 @@ function App() {
     currentRequestedPropic, 
     setCurrentRequestedPropic,
     searchedConversation, 
-    setSearchedConversation
+    setSearchedConversation,
+    unseenMessage, 
+    setUnseenMessage
 };
 
   return (

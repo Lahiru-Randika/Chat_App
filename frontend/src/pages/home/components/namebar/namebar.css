@@ -171,6 +171,15 @@
     align-items: center;
     justify-content: space-between;
 }
+.newMessage{
+    color: trasparent;
+    font-size: 11px;
+    background-color: rgb(163, 227, 34);
+    box-shadow: 1px 1px 20px 7px green;
+    border-radius:10px;
+    padding:2px;
+}
+
 
 @media (max-width: 767px) {
     .users .person .user img {
@@ -182,5 +191,11 @@
     }
     .users .person p.name-time .time {
         display: none;
+    }
+    .newMessage{
+        font-size: 0px;
+        box-shadow: 1px 1px 20px 5px green;
+        padding: 5px;
+        border-radius:50%;
     }
 }

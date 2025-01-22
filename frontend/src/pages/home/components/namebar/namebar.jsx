@@ -7,14 +7,18 @@ import useConversation from "../../../../zustand/useConversation.js";
 import SearchBar from "../searchbar/searchbar.jsx";
 import { useSocketContext } from "../../../../context/socketContext.jsx";
 import useListenNewMembers from "../../../../hooks/useListenNewMembers.js";
+import useListenMessages from "../../../../hooks/useListenMessages.js";
 
-const NameBar=({clicked, setClicked})=>{
+const NameBar=({setClicked})=>{
 
     const {loading, conversations} = useGetConversations();
     const [clickedConIndex, setClickedConIndex] = useState(null);
     const [conWithNewUsers, setConWithNewUsers] = useState([]);
 
-    const { currentRequestedChatName, setCurrentRequestedChatName, clickedMeToSeeMyChat, setClickedMeToSeeMyChat, searchedUser, setSearchedUser, currentRequestedPropic, setCurrentRequestedPropic, searchedConversation } = useContext(MyContext);
+    const { currentRequestedChatName, setCurrentRequestedChatName, clickedMeToSeeMyChat, setClickedMeToSeeMyChat, searchedUser, setSearchedUser, currentRequestedPropic, setCurrentRequestedPropic, searchedConversation , unseenMessage, setUnseenMessage} = useContext(MyContext);
+
+    //for listen to the message even if any chat is not selected
+    useListenMessages();
 
     //--------------------------
     // const {selectedConversation, setSelectedConversation} = useConversation();
@@ -23,13 +27,15 @@ const NameBar=({clicked, setClicked})=>{
 
     // console.log("All conversations: ",conversations)
 
-    //map emojis with the conversations
-    const emojis = conversations.map(() => getRandomEmoji());
+    // map emojis with the conversations
+    // const emojis = conversations.map(() => getRandomEmoji());
 
     const {onlineUsers} = useSocketContext();
     // const isOnline = onlineUsers.hasOwnProperty(conversations._id);
 
     const { conversationsList: realTimeNewUsers = []} = useListenNewMembers();
+
+
 
     useEffect(() => {
         if (Array.isArray(realTimeNewUsers) && Array.isArray(conversations)) {
@@ -49,13 +55,26 @@ const NameBar=({clicked, setClicked})=>{
         // setSelectedConversation(conversations._id);
         setClicked(true);
         setClickedConIndex(Clickedindex);
-        console.log(conversations)
+        // console.log(conversations)
 
         setClickedMeToSeeMyChat(conversations._id);
         setCurrentRequestedChatName(conversations.userName);
         setCurrentRequestedPropic(conversations.profilepic);
 
+        //remove the clicked_Id from the list for unseenMessages because we clicked that chat to see that message
+        unseen();
     }
+
+    useEffect(()=>{
+        const unseen=()=>{
+            setUnseenMessage((prevUnseen) => 
+                prevUnseen.filter((id) => id !== clickedMeToSeeMyChat)
+            );
+        }
+        unseen();
+    },[setUnseenMessage,clickedMeToSeeMyChat])
+    
+    // console.log("UnseenMessage from namebar: ",unseenMessage)
 
     return(
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
@@ -86,7 +105,13 @@ const NameBar=({clicked, setClicked})=>{
                                                 <img src={conversation.profilepic} alt="User Avatar" />
                                                 <span className={`status ${isOnline ? "online" : "offline"}`}></span>
                                             </div>
-                                            <span>{emojis[index]}</span>
+                                            <span>
+                                                {unseenMessage.length>0 && unseenMessage.includes(conversation._id)?(
+                                                    <p className="newMessage">New message</p>):(
+                                                    ""
+                                                    // emojis[index]
+                                                )}
+                                            </span>
                                         </div>
                                         <p className="name-time d-flex align-items-center">
                                             <span className="name">{conversation.userName}</span>
@@ -110,7 +135,12 @@ const NameBar=({clicked, setClicked})=>{
                                                 <img src={conversation.profilepic} alt="User Avatar" />
                                                 <span className={`status ${isOnline ? "online" : "offline"}`}></span>
                                             </div>
-                                            <span>{emojis[index]}</span>
+                                            <span>
+                                                {unseenMessage?(
+                                                    <p>No</p>):(
+                                                    ""
+                                                )}
+                                            </span>
                                         </div>
                                         <p className="name-time d-flex align-items-center">
                                             <span className="name">{conversation.userName}</span>

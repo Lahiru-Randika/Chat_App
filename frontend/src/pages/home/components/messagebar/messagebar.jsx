@@ -1,15 +1,14 @@
-import userLogOut from "../../../../hooks/userLogOut.js";
 import userGetChat from "../../../../hooks/userGetChat.js";
 import useGetConversations from "../../../../hooks/useGetConversations.js";
 import userSendMessage from "../../../../hooks/userSendMessage.js";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { MyContext } from "../../../../App.jsx";
 import "./messagebar.css";
 import useListenMessages from "../../../../hooks/useListenMessages.js";
 import toast from "react-hot-toast";
+import LogoutPopup from "../logoutpoup/logoutpopup.jsx";
 
 const MessageBar = () => {
-    const { logout } = userLogOut();
     const { loadingconversations, conversations } = useGetConversations();
 
     const [message, setMessage] = useState("");
@@ -17,6 +16,7 @@ const MessageBar = () => {
     const { loadingChats, chatMessages, refetch } = userGetChat();
     const { loading: sending, sendMessage } = userSendMessage();
     const [lastSentMessage, setLastSentMessage]= useState();
+    const [clickToLogout, setClickToLogout] = useState(false);
 
     // Define state for messages
     const [messages, setMessages] = useState([]);
@@ -70,22 +70,35 @@ const MessageBar = () => {
         }
     };
 
+    // Create a ref for the last message
+    const lastMessageRef = useRef(null);
+
+    // Scroll to the bottom when the messages change
+    useEffect(() => {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+    }, [messages]);
+
     return (
         <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
             <div className="selected-user">
                 <span>
                     To: <span className="name">{currentRequestedChatName}</span>
                 </span>
-                <button className="btn btn-success logout" type="button" onClick={logout}>
+                <button className="btn btn-success logout" type="button" onClick={()=>setClickToLogout(true)}>
                     <i class="bi bi-box-arrow-right"></i>
                 </button>
+                <div className={clickToLogout? "popup":"no"}>
+                    <LogoutPopup setClickToLogout={setClickToLogout}/>
+                </div>
             </div>
             <div className="chat-container">
             <ul className="chat-box chatContainerScroll">
                     {!loadingChats && sortedMessages.length === 0 ? (
                         <p className="select-chat d-flex align-items-center justify-content-center h-100">Send a message to start the chat</p>
                     ) : (
-                        sortedMessages.map((message) => (
+                        sortedMessages.map((message, index) => (
                             message.senderId !== currentUser._id ? (
                                 // Message from the other user (left-aligned)
                                 <li className="chat-left" key={message._id}>
@@ -101,6 +114,10 @@ const MessageBar = () => {
                                         {new Date(message.createdAt).toLocaleString()} 
                                         <span className="fa fa-check-circle"></span>
                                     </div>
+                                    {/* Set ref for the last message */}
+                                    {index === sortedMessages.length - 1 && (
+                                        <div ref={lastMessageRef}></div>
+                                    )}
                                 </li>
                             ) : (
                                 // Message from the current user (right-aligned)
@@ -117,6 +134,10 @@ const MessageBar = () => {
                                         />
                                         <div className="chat-name">{currentUser.userName}</div>
                                     </div>
+                                    {/* Set ref for the last message */}
+                                    {index === sortedMessages.length - 1 && (
+                                        <div ref={lastMessageRef}></div>
+                                    )}
                                 </li>
                             )
                         ))

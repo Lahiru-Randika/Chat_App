@@ -8,7 +8,7 @@ import notificationSound from "../assets/notificationSound.mp3"
 const useListenMessages = () => {
     const { socket } = useSocketContext();
     // const { messages, setMessages} = useConversation()
-    const { currentRequestedChatName, clickedMeToSeeMyChat } = useContext(MyContext);
+    const { currentRequestedChatName, clickedMeToSeeMyChat , unseenMessage, setUnseenMessage} = useContext(MyContext);  
     const { chatMessages } = UserGetChats();
     const [messages, setMessages] = useState(chatMessages || []);
 
@@ -17,9 +17,15 @@ const useListenMessages = () => {
             console.log("Received new message:", newMessage.senderId ,"and clickedMeToSeeMyChat: ", clickedMeToSeeMyChat);
 
             // Update state based on the previous state
-            if (newMessage.senderId === clickedMeToSeeMyChat) {
+            if (clickedMeToSeeMyChat==null){
+                setUnseenMessage((prevUnseen)=> [...prevUnseen, newMessage.senderId]);
+            }else if (newMessage.senderId === clickedMeToSeeMyChat) {
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
+            }else{
+                setUnseenMessage((prevUnseen)=> [...prevUnseen, newMessage.senderId]);
             }
+            
+            console.log("UnseenMessage from listen messages: ",unseenMessage)
 
             // Note: This log will still show the old value of messages
             console.log("New message set after the set (async):", messages);
@@ -38,7 +44,7 @@ const useListenMessages = () => {
         return () => {
             socket?.off("newMessage", handleNewMessage);
         };
-    }, [socket]); // Remove `messages` and `setMessages` from dependencies
+    }, [socket, clickedMeToSeeMyChat]); // Remove `messages` and `setMessages` from dependencies
 
     // Optional: Log the updated messages whenever they change
     // useEffect(() => {

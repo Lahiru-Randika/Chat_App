@@ -1,6 +1,10 @@
 import "./nochatselected.css"
+import { useState } from "react";
+import LogoutPopup from "../logoutpoup/logoutpopup";
 
 const NoChatSelected=()=>{
+
+    const [clickToLogout, setClickToLogout] = useState(false);
 
     const currentUser = JSON.parse(localStorage.getItem('chat-user'));
 
@@ -11,8 +15,17 @@ const NoChatSelected=()=>{
                     <div className="greeting d-flex">
                         Hello <p>{currentUser.userName}</p>
                     </div>
-                    <div className="instructions">
+                    <div className="instructions pb-5">
                         <p>select a chat to start the conversation 😌</p>
+                    </div>
+                    <div className="logout">
+                        <button className="buttontoLogout btn btn-success logout d-flex" type="button" onClick={()=>setClickToLogout(true)}>
+                            <p>LOGOUT</p>
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                        <div className={clickToLogout? "popup":"no"}>
+                            <LogoutPopup setClickToLogout={setClickToLogout}/>
+                        </div>
                     </div>
                 </div>
             </div>
