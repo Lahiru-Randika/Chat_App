@@ -118,5 +118,14 @@ real-time-chat-app/
 
 ## UI Designs
 
+### Login Page
+
 ![Login Page](Screenshots/login.png)
 
+### Register Page
+
+![Register Page](Screenshots/register.png)
+
+### Chat App UI
+
+![Chat Page](Screenshots/chatscreen.png)
