@@ -97,6 +97,7 @@ real-time-chat-app/
 |   ├── models/       # MongoDB models
 |   ├── routes/       # API routes
 |   ├── utils/        # Utility functions
+|   ├── socket/        # socket.io configurations
 |
 └── README.md         # Project documentation
 ```
